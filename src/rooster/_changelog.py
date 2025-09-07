@@ -426,7 +426,7 @@ class ContributorsSection(ListSection):
 
         lines = []
         for author in authors:
-            line = f"- [@{author}](https://github.com/{author})"
+            line = f"- @{author}"
             lines.append(line)
 
         return cls(

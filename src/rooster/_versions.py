@@ -195,7 +195,7 @@ def update_text_version(path: Path, old_version: str, new_version: str) -> None:
     Update the version in a basic text file.
     """
     contents = path.read_text()
-    path.write_text(contents.replace(old_version, new_version))
+    path.write_text(contents.replace(old_version, new_version), newline="\n")
 
 
 def update_toml_version(
@@ -238,7 +238,7 @@ def update_toml_version(
         )
 
     # Write the update
-    path.write_text(contents)
+    path.write_text(contents, newline="\n")
 
 
 def _get_nested_key(source: dict[str, Any], key: str):

@@ -60,7 +60,7 @@ def release(
         raise typer.Exit(1)
 
     # Get the last release version
-    typer.echo(f"Inspecting repository `{directory.name}`")
+    typer.echo(f"Inspecting repository `{directory.name or '.'}`")
     repo = repo_from_path(directory)
     version_tags = versions_from_git_tags(config, repo)
     last_version = get_latest_version(version_tags.keys())

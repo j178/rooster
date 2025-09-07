@@ -21,14 +21,14 @@ def repo_from_path(target: Path) -> git.repository.Repository:
 def get_tags(config: Config, repo: git.repository.Repository) -> list[str]:
     references = repo.listall_references()
     return [
-        _parse_tag_reference(config, ref)
+        _parse_tag_reference(ref)
         for ref in references
         if ref.startswith(TAG_PREFIX + config.version_tag_prefix)
     ]
 
 
-def _parse_tag_reference(config: Config, reference: str) -> str:
-    return reference[len(TAG_PREFIX + config.version_tag_prefix) :]
+def _parse_tag_reference(reference: str) -> str:
+    return reference[len(TAG_PREFIX) :]
 
 
 def get_commit_for_tag(

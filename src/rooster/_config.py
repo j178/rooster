@@ -104,7 +104,7 @@ class Config(pydantic.BaseModel):
 
 class VersionFile(pydantic.BaseModel):
     path: Path
-    format: Literal["toml", "text", "cargo"] = "text"
+    format: Literal["pyproject", "text", "cargo"] = "text"
     field: str | None = None
 
     def __str__(self):

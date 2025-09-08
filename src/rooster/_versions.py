@@ -3,7 +3,7 @@ Utilities for working with version numbers.
 """
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import pygit2 as git
 import tomllib
@@ -136,7 +136,7 @@ def from_cargo_version(version: str) -> Version:
 
 
 def update_version_file(
-    version_file: Path | VersionFile, old_version: Version, new_version: Version
+    version_file: Path | VersionFile, old_version: Version, new_version: Version, version_format: Literal["pep440", "cargo"]
 ) -> None:
     if isinstance(version_file, Path):
         path = version_file
@@ -163,7 +163,10 @@ def update_version_file(
             raise ValueError(
                 f"Cannot update version in file {path.name} without a previous version"
             )
-        update_text_version(path, str(old_version), str(new_version))
+        if version_format == "cargo":
+            update_text_version(path, to_cargo_version(old_version), to_cargo_version(new_version))
+        else:
+            update_text_version(path, str(old_version), str(new_version))
     else:
         raise ValueError(
             f"Unsupported version update file {path.name}; expected 'Cargo.toml', 'pyproject.toml', '*.txt', or '*.md' file"

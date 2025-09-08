@@ -295,7 +295,7 @@ def release(
                         match, old_version, new_version, version_file.replace
                     )
             else:
-                update_version_file(version_file, old_version, new_version)
+                update_version_file(version_file, old_version, new_version, config.version_format)
             typer.echo(f"Updated version in {version_file}")
 
 

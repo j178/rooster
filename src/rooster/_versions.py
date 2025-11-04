@@ -185,7 +185,7 @@ def process_substitutions(
     of the last version with the new version.
     """
     new_version_str = str(new_version)
-    contents = match.read_text()
+    contents = match.read_text("utf-8")
     if replacement is None:
         contents = contents.replace(str(old_version), new_version_str)
     else:
@@ -197,7 +197,7 @@ def update_text_version(path: Path, old_version: str, new_version: str) -> None:
     """
     Update the version in a basic text file.
     """
-    contents = path.read_text()
+    contents = path.read_text("utf-8")
     path.write_text(contents.replace(old_version, new_version), newline="\n")
 
 
@@ -210,7 +210,7 @@ def update_toml_version(
     """
     Update the version in a toml file.
     """
-    contents = path.read_text()
+    contents = path.read_text("utf-8")
     parsed = tomllib.loads(contents)
 
     # First check for the key to avoid replacing the wrong thing

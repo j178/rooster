@@ -91,7 +91,7 @@ class Document:
 
     @classmethod
     def from_file(cls, file: str | Path) -> Self:
-        return cls.from_markdown(Path(file).read_text())
+        return cls.from_markdown(Path(file).read_text("utf-8"))
 
     def to_markdown(self) -> str:
         return self.renderer().render(self.document)

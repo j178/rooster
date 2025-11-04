@@ -77,7 +77,7 @@ class Config(pydantic.BaseModel):
 
         If the file does not exist, an error will be raised.
         """
-        pyproject = tomllib.loads(path.read_text())
+        pyproject = tomllib.loads(path.read_text("utf-8"))
         section = pyproject.get("tool", {}).get("rooster", {})
         return cls(**section)
 

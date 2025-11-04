@@ -20,6 +20,6 @@ def get_pyproject_version(path: Path) -> Version:
     """
     Read the current version from a `pyproject.toml` file.
     """
-    contents = path.read_text()
+    contents = path.read_text("utf-8")
     parsed = tomllib.loads(contents)
     return Version(parsed["project"]["version"])

@@ -337,4 +337,4 @@ def update_changelog(
         typer.echo(f"Version {version} already exists in changelog, updating...")
 
     changelog.insert_version_section(section)
-    changelog_file.write_text(changelog.to_markdown())
+    changelog_file.write_text(changelog.to_markdown(), "utf-8")

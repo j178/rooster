@@ -190,7 +190,7 @@ def process_substitutions(
         contents = contents.replace(str(old_version), new_version_str)
     else:
         contents = contents.replace(replacement, new_version_str)
-    match.write_text(contents)
+    match.write_text(contents, "utf-8")
 
 
 def update_text_version(path: Path, old_version: str, new_version: str) -> None:
@@ -198,7 +198,7 @@ def update_text_version(path: Path, old_version: str, new_version: str) -> None:
     Update the version in a basic text file.
     """
     contents = path.read_text("utf-8")
-    path.write_text(contents.replace(old_version, new_version), newline="\n")
+    path.write_text(contents.replace(old_version, new_version), "utf-8", newline="\n")
 
 
 def update_toml_version(
@@ -241,7 +241,7 @@ def update_toml_version(
         )
 
     # Write the update
-    path.write_text(contents, newline="\n")
+    path.write_text(contents, "utf-8", newline="\n")
 
 
 def _get_nested_key(source: dict[str, Any], key: str):

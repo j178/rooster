@@ -113,7 +113,9 @@ class VersionFile(pydantic.BaseModel):
 
 class SubstitutionEntry(pydantic.BaseModel):
     target: str
+    match: str | None = None
     replace: str | None = None
+    version_format: Literal["pep440", "cargo"] = "pep440"
 
     def __str__(self):
         return str(self.target)

@@ -292,10 +292,17 @@ def release(
             if isinstance(version_file, SubstitutionEntry):
                 for match in directory.glob(version_file.target):
                     process_substitutions(
-                        match, old_version, new_version, version_file.replace
+                        match,
+                        old_version,
+                        new_version,
+                        version_file.match,
+                        version_file.replace,
+                        version_file.version_format,
                     )
             else:
-                update_version_file(version_file, old_version, new_version, config.version_format)
+                update_version_file(
+                    version_file, old_version, new_version, config.version_format
+                )
             typer.echo(f"Updated version in {version_file}")
 
 

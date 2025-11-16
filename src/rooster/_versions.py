@@ -3,6 +3,7 @@ Utilities for working with version numbers.
 """
 
 from pathlib import Path
+import re
 from typing import Any, Literal
 
 import pygit2 as git
@@ -93,6 +94,7 @@ def bump_version(version: Version, bump_type: BumpType) -> Version:
             release[2] = 0
         case BumpType.pre:
             if not version.is_prerelease:
+                release[2] += 1
                 pre = "a1"
             else:
                 pre = f"{version.pre[0]}{version.pre[1] + 1}"
@@ -136,7 +138,10 @@ def from_cargo_version(version: str) -> Version:
 
 
 def update_version_file(
-    version_file: Path | VersionFile, old_version: Version, new_version: Version, version_format: Literal["pep440", "cargo"]
+    version_file: Path | VersionFile,
+    old_version: Version,
+    new_version: Version,
+    version_format: Literal["pep440", "cargo"],
 ) -> None:
     if isinstance(version_file, Path):
         path = version_file
@@ -164,7 +169,9 @@ def update_version_file(
                 f"Cannot update version in file {path.name} without a previous version"
             )
         if version_format == "cargo":
-            update_text_version(path, to_cargo_version(old_version), to_cargo_version(new_version))
+            update_text_version(
+                path, to_cargo_version(old_version), to_cargo_version(new_version)
+            )
         else:
             update_text_version(path, str(old_version), str(new_version))
     else:
@@ -174,23 +181,37 @@ def update_version_file(
 
 
 def process_substitutions(
-    match: Path,
+    file: Path,
     old_version: Version,
     new_version: Version,
+    match: str | None = None,
     replacement: str | None = None,
+    version_format: Literal["pep440", "cargo"] = "pep440",
 ) -> None:
     """Process substitutions in a matched file.
 
     When the replacement is None it will replace instances
     of the last version with the new version.
     """
-    new_version_str = str(new_version)
-    contents = match.read_text("utf-8")
-    if replacement is None:
-        contents = contents.replace(str(old_version), new_version_str)
+    match = re.compile(match) if match else None
+    if version_format == "cargo":
+        old_version_str = to_cargo_version(old_version)
+        new_version_str = to_cargo_version(new_version)
     else:
-        contents = contents.replace(replacement, new_version_str)
-    match.write_text(contents, "utf-8")
+        old_version_str = str(old_version)
+        new_version_str = str(new_version)
+
+    contents = file.read_text("utf-8").splitlines(keepends=True)
+    new_contents = []
+    for line in contents:
+        if (match and match.search(line)) or (not match and old_version_str in line):
+            if replacement is None:
+                line = line.replace(old_version_str, new_version_str)
+            else:
+                line = line.replace(replacement, new_version_str)
+        new_contents.append(line)
+
+    file.write_text("".join(new_contents), "utf-8")
 
 
 def update_text_version(path: Path, old_version: str, new_version: str) -> None:

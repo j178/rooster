@@ -2,12 +2,12 @@
 Utilities for working with version numbers.
 """
 
-from pathlib import Path
 import re
+from pathlib import Path
 from typing import Any, Literal
 
 import pygit2 as git
-import tomllib
+import tomli
 from packaging.version import InvalidVersion, Version
 
 from rooster._config import BumpType, Config, VersionFile
@@ -232,7 +232,7 @@ def update_toml_version(
     Update the version in a toml file.
     """
     contents = path.read_text("utf-8")
-    parsed = tomllib.loads(contents)
+    parsed = tomli.loads(contents)
 
     # First check for the key to avoid replacing the wrong thing
     try:
@@ -254,7 +254,7 @@ def update_toml_version(
     )
 
     # Confirm we updated the correct key
-    new_parsed = tomllib.loads(contents)
+    new_parsed = tomli.loads(contents)
     found_new_version = _get_nested_key(new_parsed, key)
     if found_new_version != new_version:
         raise RuntimeError(
